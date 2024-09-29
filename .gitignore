@@ -7,6 +7,7 @@ bower_components/
 *.log
 *.tmp
 *.swp
+*.json
 .DS_Store
 
 # Ignore build directories
@@ -50,6 +51,7 @@ env/
 *.ipr
 *.iws
 
+
 # Ignore coverage reports
 coverage/
 *.lcov
@@ -63,5 +65,5 @@ coverage/
 secret.txt
 
 #Ignore specific folders
-logs/
+all_logs/
 archieve/
