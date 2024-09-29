@@ -4,12 +4,12 @@ import subprocess
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import os
-import signal
 from datetime import datetime
 import re
 import logging
 from queue import Queue, Empty
 import json
+import platform
 
 # Configuration dictionary
 CONFIG = {
@@ -360,10 +360,13 @@ class AdvancedFileCopyGUI:
     def show_log(self):
         if self.current_log_file and os.path.exists(self.current_log_file):
             try:
-                os.startfile(self.current_log_file)
-            except AttributeError:
-                # For non-Windows systems
-                subprocess.call(["xdg-open", self.current_log_file])
+                if platform.system() == "Windows":
+                    os.startfile(self.current_log_file)
+                else:
+                    subprocess.call(["xdg-open", self.current_log_file])
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not open log file: {e}")
+                logging.error(f"Failed to open log file: {e}")
         else:
             messagebox.showinfo("Log", "No log file available. Please run a copy operation first.")
 
@@ -389,14 +392,13 @@ class AdvancedFileCopyGUI:
         dest = self.dest_entry.get()
         if os.path.isdir(dest):
             try:
-                os.startfile(dest)
-            except AttributeError:
-                # For non-Windows systems
-                try:
+                if platform.system() == "Windows":
+                    os.startfile(dest)
+                else:
                     subprocess.call(["xdg-open", dest])
-                except Exception as e:
-                    messagebox.showerror("Error", f"Could not open destination folder: {e}")
-                    logging.error(f"Failed to open destination folder: {e}")
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not open destination folder: {e}")
+                logging.error(f"Failed to open destination folder: {e}")
         else:
             messagebox.showwarning("Warning", "Destination folder does not exist.")
 
